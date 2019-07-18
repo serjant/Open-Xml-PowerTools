@@ -13,8 +13,8 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
 
-namespace OpenXmlPowerTools
-{
+//namespace OpenXmlPowerTools
+//{
     class WmlComparer02
     {
         static void Main(string[] args)
@@ -47,4 +47,4 @@ namespace OpenXmlPowerTools
             consolidatedWml.SaveAs(Path.Combine(tempDi.FullName, "Consolidated.docx"));
         }
     }
-}
+//}

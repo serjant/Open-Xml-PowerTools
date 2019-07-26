@@ -129,23 +129,16 @@ namespace OpenXmlPowerTools
 
       if (element.Name == W.r)
       {
-        IEnumerable<XElement> runChildrenToProcess = element
-            .Elements();
-        //.Where(e => e.Name != W.rPr);
+                IEnumerable<XElement> runChildrenToProcess = element
+                    .Elements();
+                //.Where(e => e.Name != W.rPr);
         foreach (XElement item in runChildrenToProcess)
           CreateComparisonUnitAtomListRecurse(part, item, comparisonUnitAtomList, settings);
-        /*XElement runProps = element.Element(W.rPr);
+        XElement runProps = element.Element(W.rPr);
         if (runProps != null)
         {
-          var rPrComparisonUnitAtom = new ComparisonUnitAtom(
-              runProps,
-              element.AncestorsAndSelf()
-                  .TakeWhile(a => a.Name != W.body && a.Name != W.footnotes && a.Name != W.endnotes).Reverse()
-                  .ToArray(),
-              part,
-              settings);
-          comparisonUnitAtomList.Add(rPrComparisonUnitAtom);
-        }*/
+            CreateComparisonUnitAtomListRecurse(part, runProps, comparisonUnitAtomList, settings);
+        }
         return;
       }
 

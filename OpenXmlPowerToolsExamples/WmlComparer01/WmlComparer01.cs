@@ -25,8 +25,8 @@ class WmlComparer01
     WmlDocument result = WmlComparer.Compare(
         // new WmlDocument("../../Source1.docx"),
         // new WmlDocument("../../Source2.docx"),
-        new WmlDocument("/Users/david/Downloads/Fox.docx"),
-        new WmlDocument("/Users/david/Downloads/Bear.docx"),
+        new WmlDocument("/Users/david/Downloads/1.docx"),
+        new WmlDocument("/Users/david/Downloads/2.docx"),
         settings);
     //result.SaveAs(Path.Combine(tempDi.FullName, "Compared.docx"));
     result.SaveAs(Path.Combine(tempDi.FullName, "/Users/david/Downloads/Compared.docx"));

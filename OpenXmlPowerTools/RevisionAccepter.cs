@@ -8,14 +8,14 @@ namespace OpenXmlPowerTools
 {
     public class RevisionAccepter
     {
-        public static WmlDocument RejectDeletedRevisions(WmlDocument document)
+        public static WmlDocument ReverseDeletedRevisions(WmlDocument document)
         {
             using (MemoryStream ms = new MemoryStream())
             {
                 ms.Write(document.DocumentByteArray, 0, document.DocumentByteArray.Length);
                 using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, true))
                 {
-                    RejectDeletedRevisions(wDoc);
+                    ReverseDeletedRevisions(wDoc);
                 }
                 return new WmlDocument(document.FileName, ms.ToArray());
             }
@@ -47,9 +47,9 @@ namespace OpenXmlPowerTools
             }
         }
 
-        public static void RejectDeletedRevisions(WordprocessingDocument doc)
+        public static void ReverseDeletedRevisions(WordprocessingDocument doc)
         {
-            RevisionProcessor.RejectDeletedRevisions(doc);
+            RevisionProcessor.ReverseDeletedRevisions(doc);
         }
 
         public static void RejectRevisions(WordprocessingDocument doc)

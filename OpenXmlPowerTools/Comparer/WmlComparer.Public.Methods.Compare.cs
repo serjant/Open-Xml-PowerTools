@@ -44,6 +44,38 @@ namespace OpenXmlPowerTools
 {
     public static partial class WmlComparer
     {
+        public static WmlDocument Compare(WmlDocument leftPrevDocument, WmlDocument leftDocument, WmlDocument rightDocument, WmlComparerSettings settings)
+        {
+            WmlDocument firstResult = WmlComparer.Compare(
+                leftPrevDocument,
+                rightDocument,
+                settings
+            );
+            firstResult = RevisionAccepter.AcceptRevisions(firstResult);
+
+            WmlDocument secondResult = WmlComparer.Compare(
+                    leftPrevDocument,
+                    leftDocument,
+                    settings
+                );
+            secondResult = RevisionAccepter.AcceptRevisions(secondResult);
+
+            WmlDocument thirdResult = WmlComparer.Compare(
+                    secondResult,
+                    firstResult,
+                    settings
+                );
+            thirdResult = RevisionAccepter.ReverseDeletedRevisions(thirdResult);
+            thirdResult = RevisionAccepter.AcceptRevisions(thirdResult);
+
+            WmlDocument threeWayMergedDocument = WmlComparer.Compare(
+                    leftDocument,
+                    thirdResult,
+                    settings
+                );
+            return threeWayMergedDocument;
+        }
+
         public static WmlDocument Compare(WmlDocument source1, WmlDocument source2, WmlComparerSettings settings)
         {
             return CompareInternal(source1, source2, settings, true);

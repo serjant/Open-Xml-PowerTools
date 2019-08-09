@@ -11,47 +11,26 @@ using Newtonsoft.Json;
 
 class WmlComparer01
 {
-    public static bool IsDebug = false;
+    public static bool IsDebug = true;
     public static string DownloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
     private static Diff CompareDocuments(WmlDocument leftPrevDocument, WmlDocument leftDocument, WmlDocument rightDocument, WmlComparerSettings settings)
     {
-        WmlDocument firstResult = WmlComparer.Compare(
-                leftPrevDocument,
+        WmlDocument result = WmlComparer.Compare(
+            leftPrevDocument,
+                leftDocument,
                 rightDocument,
                 settings
             );
-        firstResult = RevisionAccepter.AcceptRevisions(firstResult);
 
-        WmlDocument secondResult = WmlComparer.Compare(
-                leftPrevDocument,
-                leftDocument,
-                settings
-            );
-        secondResult = RevisionAccepter.AcceptRevisions(secondResult);
-
-        WmlDocument thirdResult = WmlComparer.Compare(
-                secondResult,
-                firstResult,
-                settings
-            );
-        thirdResult = RevisionAccepter.RejectDeletedRevisions(thirdResult);
-        thirdResult = RevisionAccepter.AcceptRevisions(thirdResult);
-
-        WmlDocument threeWayMergedDocument = WmlComparer.Compare(
-                leftDocument,
-                thirdResult,
-                settings
-            );
-
-        var revisions = WmlComparer.GetRevisions(threeWayMergedDocument, settings);
+        var revisions = WmlComparer.GetRevisions(result, settings);
 
         Diff diff = new Diff();
-        diff.mergedContent = threeWayMergedDocument.toOOXML();
+        diff.mergedContent = result.toOOXML();
         diff.mergeChangesCounter = revisions.Count;
 
-        if(IsDebug)
-            threeWayMergedDocument.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
+        if (IsDebug)
+            result.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
 
         return diff;
     }
@@ -64,7 +43,7 @@ class WmlComparer01
                 settings
             );
 
-        if(IsDebug)
+        if (IsDebug)
             result.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
 
         var revisions = WmlComparer.GetRevisions(result, settings);
@@ -100,13 +79,14 @@ class WmlComparer01
                 oldContentFile = opts.OldContentFile;
                 newContentFile = opts.NewContentFile;
                 Console.WriteLine(oldContentFile);
-            } else
+            }
+            else
             {
                 oldContentFile = Path.Combine(DownloadsFolder, "2.docx");
                 newContentFile = Path.Combine(DownloadsFolder, "3.docx");
                 opts.PreviousContentFile = Path.Combine(DownloadsFolder, "1.docx");
             }
-            
+
             WmlDocument oldDocument = opts.OldContent != null ? new WmlDocument("old.docx", Encoding.Unicode.GetBytes(opts.OldContent)) : new WmlDocument(oldContentFile);
             WmlDocument newDocument = opts.NewContent != null ? new WmlDocument("new.docx", Encoding.Unicode.GetBytes(opts.NewContent)) : new WmlDocument(newContentFile);
             WmlDocument prevDocument = null;
@@ -123,7 +103,8 @@ class WmlComparer01
             if (opts.Username != null)
             {
                 settings.AuthorForRevisions = opts.Username;
-            } else
+            }
+            else
             {
                 settings.AuthorForRevisions = "Microsoft";
             }

@@ -28,7 +28,123 @@ namespace OpenXmlPowerTools
             }
         }
 
-        public static void RejectRevisions(WordprocessingDocument doc)
+        public static void RejectDeletedRevisions(WordprocessingDocument doc)
+        {
+            MainDocumentPart mainDocumentPart = doc.MainDocumentPart;
+            var xDoc = mainDocumentPart.GetXDocument();
+            var newRoot = (XElement)ReverseRejectedRevisionsTransform(xDoc.Root);
+            xDoc.Root.ReplaceWith(newRoot);
+            mainDocumentPart.PutXDocument();
+
+        }
+
+        private static object ReverseRejectedRevisionsTransform(XNode node)
+        {
+            var element = node as XElement;
+            if (element != null)
+            {
+                var parent = element
+                    .Ancestors()
+                    .Where(a => a.Name != W.sdtContent && a.Name != W.sdt && a.Name != W.smartTag)
+                    .FirstOrDefault();
+
+                if (element.Name == W.del &&
+                    parent.Name == W.p)
+                {
+                    return new XElement(W.ins,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.del &&
+                    parent.Name == W.rPr &&
+                    parent.Parent.Name == W.pPr)
+                {
+                    return new XElement(W.ins, element.Attributes());
+                }
+
+                if (element.Name == W.del &&
+                          parent.Name == W.trPr)
+                {
+                    return new XElement(W.ins, element.Attributes());
+                }
+
+                if (element.Name == W.del &&
+                    parent.Name == M.r)
+                {
+                    return new XElement(W.ins,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.moveFrom)
+                {
+                    return new XElement(W.moveTo,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+                if (element.Name == W.moveFromRangeStart)
+                {
+                    return new XElement(W.moveToRangeStart,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+                if (element.Name == W.moveFromRangeEnd)
+                {
+                    return new XElement(W.moveToRangeEnd,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.customXmlDelRangeStart)
+                {
+                    return new XElement(W.customXmlInsRangeStart,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+                if (element.Name == W.customXmlDelRangeEnd)
+                {
+                    return new XElement(W.customXmlInsRangeEnd,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.customXmlMoveFromRangeStart)
+                {
+                    return new XElement(W.customXmlMoveToRangeStart,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+                if (element.Name == W.customXmlMoveFromRangeEnd)
+                {
+                    return new XElement(W.customXmlMoveToRangeEnd,
+                        element.Attributes(),
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.delInstrText)
+                {
+                    return new XElement(W.instrText,
+                        element.Attributes(), // pulls in xml:space attribute
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                if (element.Name == W.delText)
+                {
+                    return new XElement(W.t,
+                        element.Attributes(), // pulls in xml:space attribute
+                        element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+                }
+
+                return new XElement(element.Name,
+                    element.Attributes(),
+                    element.Nodes().Select(n => ReverseRejectedRevisionsTransform(n)));
+            }
+
+            return node;
+        }
+
+                public static void RejectRevisions(WordprocessingDocument doc)
         {
             RejectRevisionsForPart(doc.MainDocumentPart);
             foreach (var part in doc.MainDocumentPart.HeaderParts)

@@ -1869,24 +1869,24 @@ namespace OpenXmlPowerTools
                 {
                     var footnoteTextStyleMarkup =
                         @"<w:style w:type=""paragraph""
-           w:styleId=""FootnoteText""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""footnote text""/>
-    <w:basedOn w:val=""Normal""/>
-    <w:link w:val=""FootnoteTextChar""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:unhideWhenUsed/>
-    <w:pPr>
-      <w:spacing w:after=""0""
-                 w:line=""240""
-                 w:lineRule=""auto""/>
-    </w:pPr>
-    <w:rPr>
-      <w:sz w:val=""20""/>
-      <w:szCs w:val=""20""/>
-    </w:rPr>
-  </w:style>";
+                                   w:styleId=""FootnoteText""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""footnote text""/>
+                            <w:basedOn w:val=""Normal""/>
+                            <w:link w:val=""FootnoteTextChar""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:unhideWhenUsed/>
+                            <w:pPr>
+                              <w:spacing w:after=""0""
+                                         w:line=""240""
+                                         w:lineRule=""auto""/>
+                            </w:pPr>
+                            <w:rPr>
+                              <w:sz w:val=""20""/>
+                              <w:szCs w:val=""20""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement ftsElement = XElement.Parse(footnoteTextStyleMarkup);
                     sXDoc.Root.Add(ftsElement);
                 }
@@ -1899,19 +1899,19 @@ namespace OpenXmlPowerTools
                 {
                     var footnoteTextCharStyleMarkup =
                         @"<w:style w:type=""character""
-           w:customStyle=""1""
-           w:styleId=""FootnoteTextChar""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""Footnote Text Char""/>
-    <w:basedOn w:val=""DefaultParagraphFont""/>
-    <w:link w:val=""FootnoteText""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:rPr>
-      <w:sz w:val=""20""/>
-      <w:szCs w:val=""20""/>
-    </w:rPr>
-  </w:style>";
+                                   w:customStyle=""1""
+                                   w:styleId=""FootnoteTextChar""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""Footnote Text Char""/>
+                            <w:basedOn w:val=""DefaultParagraphFont""/>
+                            <w:link w:val=""FootnoteText""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:rPr>
+                              <w:sz w:val=""20""/>
+                              <w:szCs w:val=""20""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement fntcsElement = XElement.Parse(footnoteTextCharStyleMarkup);
                     sXDoc.Root.Add(fntcsElement);
                 }
@@ -1924,17 +1924,17 @@ namespace OpenXmlPowerTools
                 {
                     var footnoteReferenceStyleMarkup =
                         @"<w:style w:type=""character""
-           w:styleId=""FootnoteReference""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""footnote reference""/>
-    <w:basedOn w:val=""DefaultParagraphFont""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:unhideWhenUsed/>
-    <w:rPr>
-      <w:vertAlign w:val=""superscript""/>
-    </w:rPr>
-  </w:style>";
+                                   w:styleId=""FootnoteReference""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""footnote reference""/>
+                            <w:basedOn w:val=""DefaultParagraphFont""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:unhideWhenUsed/>
+                            <w:rPr>
+                              <w:vertAlign w:val=""superscript""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement fnrsElement = XElement.Parse(footnoteReferenceStyleMarkup);
                     sXDoc.Root.Add(fnrsElement);
                 }
@@ -1950,24 +1950,24 @@ namespace OpenXmlPowerTools
                 {
                     var endnoteTextStyleMarkup =
                         @"<w:style w:type=""paragraph""
-           w:styleId=""EndnoteText""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""endnote text""/>
-    <w:basedOn w:val=""Normal""/>
-    <w:link w:val=""EndnoteTextChar""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:unhideWhenUsed/>
-    <w:pPr>
-      <w:spacing w:after=""0""
-                 w:line=""240""
-                 w:lineRule=""auto""/>
-    </w:pPr>
-    <w:rPr>
-      <w:sz w:val=""20""/>
-      <w:szCs w:val=""20""/>
-    </w:rPr>
-  </w:style>";
+                                   w:styleId=""EndnoteText""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""endnote text""/>
+                            <w:basedOn w:val=""Normal""/>
+                            <w:link w:val=""EndnoteTextChar""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:unhideWhenUsed/>
+                            <w:pPr>
+                              <w:spacing w:after=""0""
+                                         w:line=""240""
+                                         w:lineRule=""auto""/>
+                            </w:pPr>
+                            <w:rPr>
+                              <w:sz w:val=""20""/>
+                              <w:szCs w:val=""20""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement etsElement = XElement.Parse(endnoteTextStyleMarkup);
                     sXDoc.Root.Add(etsElement);
                 }
@@ -1980,19 +1980,19 @@ namespace OpenXmlPowerTools
                 {
                     var endnoteTextCharStyleMarkup =
                         @"<w:style w:type=""character""
-           w:customStyle=""1""
-           w:styleId=""EndnoteTextChar""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""Endnote Text Char""/>
-    <w:basedOn w:val=""DefaultParagraphFont""/>
-    <w:link w:val=""EndnoteText""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:rPr>
-      <w:sz w:val=""20""/>
-      <w:szCs w:val=""20""/>
-    </w:rPr>
-  </w:style>";
+                                   w:customStyle=""1""
+                                   w:styleId=""EndnoteTextChar""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""Endnote Text Char""/>
+                            <w:basedOn w:val=""DefaultParagraphFont""/>
+                            <w:link w:val=""EndnoteText""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:rPr>
+                              <w:sz w:val=""20""/>
+                              <w:szCs w:val=""20""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement entcsElement = XElement.Parse(endnoteTextCharStyleMarkup);
                     sXDoc.Root.Add(entcsElement);
                 }
@@ -2005,17 +2005,17 @@ namespace OpenXmlPowerTools
                 {
                     var endnoteReferenceStyleMarkup =
                         @"<w:style w:type=""character""
-           w:styleId=""EndnoteReference""
-           xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
-    <w:name w:val=""endnote reference""/>
-    <w:basedOn w:val=""DefaultParagraphFont""/>
-    <w:uiPriority w:val=""99""/>
-    <w:semiHidden/>
-    <w:unhideWhenUsed/>
-    <w:rPr>
-      <w:vertAlign w:val=""superscript""/>
-    </w:rPr>
-  </w:style>";
+                                   w:styleId=""EndnoteReference""
+                                   xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"">
+                            <w:name w:val=""endnote reference""/>
+                            <w:basedOn w:val=""DefaultParagraphFont""/>
+                            <w:uiPriority w:val=""99""/>
+                            <w:semiHidden/>
+                            <w:unhideWhenUsed/>
+                            <w:rPr>
+                              <w:vertAlign w:val=""superscript""/>
+                            </w:rPr>
+                          </w:style>";
                     XElement enrsElement = XElement.Parse(endnoteReferenceStyleMarkup);
                     sXDoc.Root.Add(enrsElement);
                 }

@@ -107,7 +107,12 @@ namespace OpenXmlPowerTools
             M.oMathPara,
             M.oMath,
             W.fldChar,
-            W.instrText
+            W.instrText//,
+           // W.rPr,
+           // W.b,
+           // W.i,
+            //W.bCs,
+            //W.iCs
         };
 
         private static readonly XName[] ElementsToThrowAway =

@@ -34,6 +34,10 @@ namespace OpenXmlPowerTools
                     var rId = (string) att;
 
                     PackageRelationship relationshipForDeletedPart = partOfDeletedContent.GetRelationship(rId);
+                    if (relationshipForDeletedPart.TargetUri.IsAbsoluteUri)
+                    {
+                        continue;
+                    }
 
                     Uri targetUri = PackUriHelper
                         .ResolvePartUri(

@@ -402,6 +402,19 @@ namespace OpenXmlPowerTools
             : base(fileName, memStream, convertToTransitional)
         {
         }
+
+        public string toOOXML()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ms.Write(this.DocumentByteArray, 0, this.DocumentByteArray.Length);
+                using (WordprocessingDocument sDoc = WordprocessingDocument.Open(ms, true))
+                {
+                    string ooxml = sDoc.ToFlatOpcString();
+                    return ooxml.Replace("\n", "");
+                }
+            }
+        }
     }
 
     public partial class SmlDocument : OpenXmlPowerToolsDocument

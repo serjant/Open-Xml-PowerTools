@@ -10,6 +10,10 @@
     <ProjectReference Include="..\..\OpenXmlPowerTools\OpenXmlPowerTools.csproj" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.1" />
     <PackageReference Include="NuGet.Core" Version="2.14.0" />
+    <PackageReference Include="CommandLineParser.FSharp" Version="2.6.0" />
+    <PackageReference Include="Vse.Web.Serialization.ControlledSerializationJsonConverter" Version="1.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
   </ItemGroup>
 
   <ItemGroup>

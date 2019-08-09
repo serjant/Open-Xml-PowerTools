@@ -2,43 +2,178 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Xml.Linq;
-using DocumentFormat.OpenXml.Packaging;
+using CommandLine;
+using CommandLine.Text;
 using OpenXmlPowerTools;
+using Newtonsoft.Json;
 
-//namespace OpenXmlPowerTools
-//{
 class WmlComparer01
 {
-  static void Main(string[] args)
-  {
-    var n = DateTime.Now;
-    var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
-    tempDi.Create();
+    public static bool IsDebug = false;
+    public static string DownloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
-    WmlComparerSettings settings = new WmlComparerSettings();
-    settings.AuthorForRevisions = "David Baum";
-    WmlDocument result = WmlComparer.Compare(
-        // new WmlDocument("../../Source1.docx"),
-        // new WmlDocument("../../Source2.docx"),
-        new WmlDocument("/Users/david/Downloads/1.docx"),
-        new WmlDocument("/Users/david/Downloads/2.docx"),
-        settings);
-    //result.SaveAs(Path.Combine(tempDi.FullName, "Compared.docx"));
-    result.SaveAs(Path.Combine(tempDi.FullName, "/Users/david/Downloads/Compared.docx"));
-
-    var revisions = WmlComparer.GetRevisions(result, settings);
-    foreach (var rev in revisions)
+    private static Diff CompareDocuments(WmlDocument leftPrevDocument, WmlDocument leftDocument, WmlDocument rightDocument, WmlComparerSettings settings)
     {
-      Console.WriteLine("Author: " + rev.Author);
-      Console.WriteLine("Revision type: " + rev.RevisionType);
-      Console.WriteLine("Revision text: " + rev.Text);
-      Console.WriteLine();
+        WmlDocument firstResult = WmlComparer.Compare(
+                leftPrevDocument,
+                rightDocument,
+                settings
+            );
+        firstResult = RevisionAccepter.AcceptRevisions(firstResult);
+
+        WmlDocument secondResult = WmlComparer.Compare(
+                leftPrevDocument,
+                leftDocument,
+                settings
+            );
+        secondResult = RevisionAccepter.AcceptRevisions(secondResult);
+
+        WmlDocument thirdResult = WmlComparer.Compare(
+                secondResult,
+                firstResult,
+                settings
+            );
+        thirdResult = RevisionAccepter.RejectDeletedRevisions(thirdResult);
+        thirdResult = RevisionAccepter.AcceptRevisions(thirdResult);
+
+        WmlDocument threeWayMergedDocument = WmlComparer.Compare(
+                leftDocument,
+                thirdResult,
+                settings
+            );
+
+        var revisions = WmlComparer.GetRevisions(threeWayMergedDocument, settings);
+
+        Diff diff = new Diff();
+        diff.mergedContent = threeWayMergedDocument.toOOXML();
+        diff.mergeChangesCounter = revisions.Count;
+
+        if(IsDebug)
+            threeWayMergedDocument.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
+
+        return diff;
     }
-  }
+
+    private static Diff CompareDocuments(WmlDocument leftDocument, WmlDocument rightDocument, WmlComparerSettings settings)
+    {
+        WmlDocument result = WmlComparer.Compare(
+                leftDocument,
+                rightDocument,
+                settings
+            );
+
+        if(IsDebug)
+            result.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
+
+        var revisions = WmlComparer.GetRevisions(result, settings);
+
+        Diff diff = new Diff();
+        diff.mergedContent = result.toOOXML();
+        diff.mergeChangesCounter = revisions.Count;
+
+        return diff;
+    }
+
+    static void Main(string[] args)
+    {
+        ParserResult<ArgumentOptions> parserResult = CommandLine.Parser.Default.ParseArguments<ArgumentOptions>(args);
+
+        parserResult.WithParsed<ArgumentOptions>(opts =>
+        {
+            string oldContentFile = null;
+            string newContentFile = null;
+            opts.PreviousContentFile = null;
+
+            if (!IsDebug)
+            {
+                if (opts.NewContentFile == null)
+                {
+                    ThrowError("New content file should not be an empty", parserResult);
+                }
+                if (opts.OldContentFile == null)
+                {
+                    ThrowError("Old content file should not be an empty", parserResult);
+                }
+
+                oldContentFile = opts.OldContentFile;
+                newContentFile = opts.NewContentFile;
+                Console.WriteLine(oldContentFile);
+            } else
+            {
+                oldContentFile = Path.Combine(DownloadsFolder, "2.docx");
+                newContentFile = Path.Combine(DownloadsFolder, "3.docx");
+                opts.PreviousContentFile = Path.Combine(DownloadsFolder, "1.docx");
+            }
+            
+            WmlDocument oldDocument = opts.OldContent != null ? new WmlDocument("old.docx", Encoding.Unicode.GetBytes(opts.OldContent)) : new WmlDocument(oldContentFile);
+            WmlDocument newDocument = opts.NewContent != null ? new WmlDocument("new.docx", Encoding.Unicode.GetBytes(opts.NewContent)) : new WmlDocument(newContentFile);
+            WmlDocument prevDocument = null;
+            if (opts.PreviousContentFile != null)
+            {
+                prevDocument = new WmlDocument(opts.PreviousContentFile);
+            }
+            if (opts.PreviousContent != null && opts.PreviousContentFile == null)
+            {
+                prevDocument = new WmlDocument("prev.docx", Encoding.Unicode.GetBytes(opts.PreviousContent));
+            }
+
+            WmlComparerSettings settings = new WmlComparerSettings();
+            if (opts.Username != null)
+            {
+                settings.AuthorForRevisions = opts.Username;
+            } else
+            {
+                settings.AuthorForRevisions = "Microsoft";
+            }
+
+            Diff diff = null;
+
+            if (prevDocument == null)
+            {
+                diff = CompareDocuments(
+                    oldDocument,
+                    newDocument,
+                    settings
+                    );
+            }
+            else
+            {
+                diff = CompareDocuments(
+                    prevDocument,
+                    oldDocument,
+                    newDocument,
+                    settings
+                    );
+            }
+            var json = JsonConvert.SerializeObject(diff);
+            Console.WriteLine(json);
+        }).WithNotParsed<ArgumentOptions>((errs) =>
+        {
+            string exceptionString = null;
+            foreach (var error in errs)
+            {
+                if (exceptionString == null)
+                {
+                    exceptionString = error.ToString();
+                }
+                else
+                {
+                    exceptionString = String.Format("{0}\n{1}", exceptionString, error.ToString());
+                }
+            }
+            Exception exception = new Exception(exceptionString);
+            throw exception;
+        });
+    }
+
+    public static void ThrowError(string error, ParserResult<ArgumentOptions> parserResult)
+    {
+        string helpText = HelpText.RenderUsageText(parserResult);
+        Console.WriteLine(helpText);
+
+        Exception exception = new Exception(error);
+        throw exception;
+    }
 }
-//}

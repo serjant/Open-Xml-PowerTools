@@ -2,10 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using OpenXmlPowerTools;
 
 namespace RevisionAccepterExample
@@ -19,8 +16,11 @@ namespace RevisionAccepterExample
             tempDi.Create();
 
             // Accept all revisions, save result as a new document
-            WmlDocument result = RevisionAccepter.AcceptRevisions(new WmlDocument("../../Source1.docx"));
-            result.SaveAs(Path.Combine(tempDi.FullName, "Out1.docx"));
+            //WmlDocument result = RevisionAccepter.AcceptRevisions(new WmlDocument("../../Source1.docx"));
+            WmlDocument wmlDocument = new WmlDocument("/Users/david/Downloads/Comparison.docx");
+            //WmlDocument result = RevisionAccepter.RejectRevisions(wmlDocument);
+            WmlDocument result = RevisionAccepter.AcceptRevisions(wmlDocument);
+            result.SaveAs(Path.Combine("/Users/david/Downloads/", "Out1.docx"));
         }
     }
 }

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 class WmlComparer01
 {
-    public static bool IsDebug = true;
+    public static bool IsDebug = false;
     public static string DownloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
     private static Diff CompareDocuments(WmlDocument leftPrevDocument, WmlDocument leftDocument, WmlDocument rightDocument, WmlComparerSettings settings)
@@ -25,12 +25,12 @@ class WmlComparer01
 
         var revisions = WmlComparer.GetRevisions(result, settings);
 
+        if (IsDebug)
+            result.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
+
         Diff diff = new Diff();
         diff.mergedContent = result.toOOXML();
         diff.mergeChangesCounter = revisions.Count;
-
-        if (IsDebug)
-            result.SaveAs(Path.Combine(DownloadsFolder, "Compared.docx"));
 
         return diff;
     }
@@ -63,7 +63,6 @@ class WmlComparer01
         {
             string oldContentFile = null;
             string newContentFile = null;
-            opts.PreviousContentFile = null;
 
             if (!IsDebug)
             {
@@ -78,7 +77,6 @@ class WmlComparer01
 
                 oldContentFile = opts.OldContentFile;
                 newContentFile = opts.NewContentFile;
-                Console.WriteLine(oldContentFile);
             }
             else
             {
